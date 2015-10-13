@@ -9,6 +9,7 @@ hive > show tables
 
 you should see all your tables listed including Web_Session_Log
 
+hive > exit;
 
 2. as user or root, save the following as testUDF.py in /data/ucb (where ucb is my dir which I created earlier)
 
@@ -23,6 +24,20 @@ for line in sys.stdin:
         DATETIME = line.split('t')
 
         print doit(DATETIME)
+
+
+------------------------------------------
+HOW TO SAVE THE FILE WITHIN YOUR AWS ENV:
+cd /data/your_dir
+
+vi testUDF.py
+
+this will open up vi. 
+press the 'i' key
+paste the code from above
+press the 'esc' key
+type :wq
+(including the colon)
 
 
 3. start hive:
