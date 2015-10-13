@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# xx.x.xxx.xx  <- your elastic ip
+# vol-xxxxxxxx   <- your volume id
+# you need to choose your own security group which has open ports: 8080,8088,4040,50070,22,8020
 
 # launch (availability-zone = us-east-1b, securitygroup = ucb_205_security_group, ami = ucbw205_complete_plus_postgres)
 
@@ -15,14 +18,14 @@ until [ "$check_status" == "running" ]; do
 done
 
 
-# set elastic ip
-aws ec2 associate-address --instance-id $NEWINSTACEID --public-ip 52.2.158.11
+# set elastic ip. you can do this first, one time through he AWS console
+aws ec2 associate-address --instance-id $NEWINSTACEID --public-ip xx.x.xxx.xx
 
 # attach my volume 
-aws ec2 attach-volume --volume-id vol-5c985ab0 --instance-id $NEWINSTACEID --device /dev/sdf
+aws ec2 attach-volume --volume-id vol-xxxxxxxx --instance-id $NEWINSTACEID --device /dev/sdf
 
-# Go Play!
-ssh -i "ucb.pem" root@52.2.158.11
+# Go Play! root @ elastic ip
+ssh -i "your_key.pem" root@xx.x.xxx.xx
 
 #TODO: write bootsrap.sh
 #/root/start_hadoop.sh
