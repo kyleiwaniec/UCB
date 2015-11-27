@@ -1,0 +1,2 @@
+0 * * * * . /Users/koza/Documents/UCBerkeley/205/notify-aws.sh
+
