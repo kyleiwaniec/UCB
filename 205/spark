@@ -1,0 +1,117 @@
+Integrating SparkSQL and the Hive Metastore
+
+ 
+
+Integrating SparkSQL with the Hive Metastore is straightforward.  However, we need to make sure that SparkSQL knows where our Hive metadata is.
+
+ 
+
+Place a Hive configuration in Spark
+
+ 
+
+mv spark15 /data
+
+ 
+
+ln -s /data/spark15 $HOME/spark15
+
+ 
+
+cp /data/hadoop/hive/conf/hive-site.xml /data/spark15/conf
+
+ 
+
+Edit /data/spark15/conf/hive-site.xml and change the following:
+
+<!-- <property>
+
+  <name>hive.metastore.uris</name>
+
+  <value>thrift://localhost:9083</value>
+
+  <description>IP address (or fully-qualified domain name) and port of the metastore host</description>
+
+</property>
+
+-->
+
+ 
+
+To
+
+<property>
+
+  <name>hive.metastore.uris</name>
+
+  <value>thrift://localhost:9083</value>
+
+  <description>IP address (or fully-qualified domain name) and port of the metastore host</description>
+
+</property>
+
+ 
+
+Set up a Hive Metastore Service Script
+
+ 
+
+In a file called /data/start_metastore.sh place the following:
+
+ 
+
+#! /bin/bash
+
+nohup hive --service metastore &
+
+ 
+
+In a file called /data/stop_metastore.sh place the following:
+
+#! /bin/bash
+
+ps aux|grep org.apache.hadoop.hive.metastore.HiveMetaStore|awk '{print $2}'|xargs kill -9
+
+ 
+
+From now on, when you want to use Hive Data in Spark, you must do:
+
+ 
+
+/data/start_postgres.sh
+
+/data/start_metastore.sh
+
+ 
+
+Then start spark using one of the following
+
+/data/spark15/bin/pyspark
+
+OR
+
+/data/spark15/bin/spark-sql
+
+OR
+
+/data/spark15/bin/spark
+
+OR
+
+/data/spark15/bin/spark-submit
+
+ 
+
+Configuring Zeppelin as a primary interface for Pyspark, Spark and Spark-SQL (picks up Hive metadata)
+
+ 
+
+As root, do the following:
+
+·      Copy the hive-site.xml from /data/spark15/conf to /data/zeppelin/conf
+
+·      Copy the Hadoop configurations (*-site.xml) from /etc/hadoop/conf to /data/zeppelin/conf
+
+ 
+
+Before starting zeppelin, make sure your metastore is started!
